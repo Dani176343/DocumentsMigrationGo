@@ -5,6 +5,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func main() {
@@ -13,7 +15,11 @@ func main() {
 	if err != nil {
 		log.Fatalf("Erro ao conectar ao MongoDB: %v", err)
 	}
-	defer client.Disconnect(context.Background())
+	defer func(client *mongo.Client, ctx context.Context) {
+		err := client.Disconnect(ctx)
+		if err != nil {
+		}
+	}(client, context.Background())
 	defer cancel()
 
 	// 2. Definindo o PID a ser procurado
